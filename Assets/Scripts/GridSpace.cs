@@ -8,14 +8,18 @@ public class GridSpace : MonoBehaviour
     public Button button;
     public Text buttonText;
     public GameController controller;
-    public int i;
-    public int j;
+    public (int i, int j) position;
 
     public void SetSpace(string playerSide = "X")
     {
         buttonText.text = playerSide;
         button.interactable = false;
-        controller.MoveMade(i, j);
+        controller.MoveMade(position);
+    }
+
+    public void SetAISpace()
+    {
+        buttonText.text = "O";
     }
 
 

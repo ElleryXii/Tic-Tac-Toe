@@ -17,12 +17,12 @@ public class GameController : MonoBehaviour
     const float screenSize = 1080;
 
     private GridSpace[,] visualGrid;
-    private sbyte[,] gameBoard;
+    private BoardState board;
 
     void Start()
     {
         visualGrid = new GridSpace[boardSize, boardSize];
-        gameBoard = new sbyte[boardSize, boardSize];
+        board = new BoardState(boardSize);
         SetGrids();
     }
 
@@ -60,8 +60,7 @@ public class GameController : MonoBehaviour
                 GameObject space = Instantiate(gridSpace);
                 visualGrid[i, j] = space.GetComponent<GridSpace>();
                 visualGrid[i, j].controller = this;
-                visualGrid[i, j].i = i;
-                visualGrid[i, j].j = j;
+                visualGrid[i, j].position = (i, j);
                 space.transform.SetParent(spaceParent);
                 space.transform.localPosition = new Vector3(x_position, y_position, 0);
 
@@ -75,15 +74,20 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void MoveMade(int i, int j)
+    public void MoveMade((int i, int j) move)
     {
         SetGridInteractable(false);
-        MakeMove();
+        board.MakeMove((move.i, move.j, 1));
+        if (!board.gameEnd)
+            MakeMove();
 
     }
 
     private void MakeMove()
     {
+        var move = GameAI.GetBestMove(board);
+        board.MakeMove((move.i, move.j, -1));
+        visualGrid[move.i, move.j].SetAISpace();
         SetGridInteractable(true);
     }
 
