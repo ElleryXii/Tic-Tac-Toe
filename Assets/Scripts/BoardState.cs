@@ -4,17 +4,21 @@ using UnityEngine;
 
 public class BoardState
 {
-    private sbyte[,] board;
-    private int boardSize;
-    private int winCondition;
+    public sbyte[,] board;
+    public int boardSize;
+    public int winCondition;
     private List<(int i, int j)> remainingMoves;
     public bool gameEnd = false;
     public (int i, int j) lastMove;
 
     public BoardState(int boardSize)
     {
+        this.boardSize = boardSize;
         board = new sbyte[boardSize, boardSize];
+
         remainingMoves = new List<(int i, int j)>();
+        lastMove = (-1, -1);
+
         for (int i = 0; i < boardSize; i++)
         {
             for (int j = 0; j < boardSize; j++)
@@ -41,10 +45,32 @@ public class BoardState
     }
 
 
-    //public BoardState DeepCopy()
-    //{
-    //    var copy = new BoardState();
+    public BoardState DeepCopy()
+    {
+        var copy = new BoardState(boardSize);
+        for (int i = 0; i < boardSize; i++)
+        {
+            for (int j = 0; j < boardSize; j++)
+            {
+                copy.board[i, j] = this.board[i, j];
+            }
+        }
 
-    //}
+        copy.remainingMoves = new List<(int i, int j)>();
+        foreach (var move in this.remainingMoves)
+        {
+            copy.remainingMoves.Add(move);
+        }
+
+        return copy;
+    }
+
+    public BoardState GetNewState((int i, int j, sbyte player) move)
+    {
+        var copy = this.DeepCopy();
+        copy.MakeMove(move);
+        return copy;
+
+    }
 
 }
