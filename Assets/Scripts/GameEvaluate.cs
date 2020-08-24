@@ -5,16 +5,8 @@ using UnityEngine;
 
 public class GameEvaluate
 {
-    //int n, m;
-    //int[][] board;
-    //int lasti, lastj;
-    //int totalmove = 0;
-    //bool player;
-    //int remainingMove;
-
     private static GameEvaluate instance = null;
     private GameEvaluate() { }
-
     public static GameEvaluate Instance
     {
         get
@@ -38,7 +30,7 @@ public class GameEvaluate
         if (w == 2)
             return 0;
         var lastMove = state.lastMove;
-        return HeuRow(lastMove.i, lastMove.j) + HeuCol(lastMove.i, lastMove.j) + HeuDia(lastMove.i, lastMove.j) + HeuAntiDia(lastMove.i, lastMove.j);
+        return HeuRow(state, lastMove.i, lastMove.j) + HeuCol(state, lastMove.i, lastMove.j) + HeuDia(state, lastMove.i, lastMove.j) + HeuAntiDia(state, lastMove.i, lastMove.j);
     }
 
     //check if game terminates. Return 0 is game has not terminated, 2 if it terminates in a draw, 1 is x win, -1 if o win
@@ -50,10 +42,10 @@ public class GameEvaluate
         int antiDiaCount = 0;
         var lasti = state.lastMove.i;
         var lastj = state.lastMove.j;
+        int p = state.lastMove.player;
         var board = state.board;
         int m = state.winCondition;
         int n = state.boardSize;
-        int p = board[lasti, lastj];
         if (p == 0)
             return 0;
         //check row
@@ -170,15 +162,10 @@ public class GameEvaluate
     int HeuCol(BoardState state, int row, int col)
     {
         int val = 0;
-        int p;
+        int p = state.lastMove.player;
 
         var board = state.board;
 
-
-        if (player)
-            p = 1;
-        else
-            p = -1;
         for (int i = row; i < state.boardSize; i++)
         {
             if (board[i, col] == 0)
@@ -202,14 +189,10 @@ public class GameEvaluate
     {
         int val = 0;
         var board = state.board;
-        int p;
+        int p = state.lastMove.player;
         int n = state.boardSize;
         var lasti = state.lastMove.i;
         var lastj = state.lastMove.j;
-        if (player)
-            p = 1;
-        else
-            p = -1;
         int i = lasti;
         int j = lastj;
         while (i < n && j < n && board[i, j] == p)
@@ -232,16 +215,12 @@ public class GameEvaluate
     int HeuAntiDia(BoardState state, int row, int col)
     {
         int val = 0;
-        int p;
+        int p = state.lastMove.player;
         var board = state.board;
         var lasti = state.lastMove.i;
         var lastj = state.lastMove.j;
         int n = state.boardSize;
 
-        if (player)
-            p = 1;
-        else
-            p = -1;
         int i = lasti;
         int j = lastj;
         while (i < n && j >= 0 && board[i, j] == p)
@@ -261,42 +240,5 @@ public class GameEvaluate
         return val * 5;
     }
 
-    // int heuRowDef(int row, int col){
-    //   int count = 0;
-    //   int val = 0;
-    //   boolean blank = false;
-    //   if (lastj>col){
-    //     for (int i = col;i>=0;i--){
-    //       if (board[row][i]==board[row][col])
-    //         count++;
-    //       else if (board[row][i]==0){
-    //         blank = true;
-    //         break;
-    //       }
-    //       else;
-    //     }
-    //   }
-    //   else{
-    //     for (int i = col;i<0;i++){
-    //       if (board[row][i]==board[row][col])
-    //         count++;
-    //       else if (board[row][i]==0){
-    //         blank = true;
-    //         break;
-    //       }
-    //       else;
-    //     }
-    //   }
-    //   if (blank){
-    //     val = 8*count*board[row][col];
-    //   }
-    //   else{
-    //     val = 2*count*board[row][col];
-    //   }
-    //   if (count==m-1){
-    //     val = 1000*board[row][col];
-    //   }
-    //   return -1*val;
-    // }
 
 }

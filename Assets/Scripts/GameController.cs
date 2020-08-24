@@ -13,6 +13,8 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private Transform spaceParent;
 
+
+    public int winCondition;
     public int boardSize;
     const float screenSize = 1080;
 
@@ -22,7 +24,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         visualGrid = new GridSpace[boardSize, boardSize];
-        board = new BoardState(boardSize);
+        board = new BoardState(boardSize, winCondition);
         SetGrids();
     }
 
@@ -51,7 +53,7 @@ public class GameController : MonoBehaviour
 
         // Set Space
         position = -screenSize / 2 + gridSize / 2;
-        float y_position = -(screenSize / 2 - gridSize / 2);
+        float y_position = screenSize / 2 - gridSize / 2;
         float x_position = position;
         for (int i = 0; i < boardSize; i++)
         {
@@ -69,7 +71,7 @@ public class GameController : MonoBehaviour
 
                 x_position += gridSize;
             }
-            y_position += gridSize;
+            y_position -= gridSize;
             x_position = position;
         }
     }
@@ -78,9 +80,9 @@ public class GameController : MonoBehaviour
     {
         SetGridInteractable(false);
         board.MakeMove((move.i, move.j, 1));
+        board.PrintBoard();
         if (!board.gameEnd)
             MakeMove();
-
     }
 
     private void MakeMove()
@@ -89,6 +91,7 @@ public class GameController : MonoBehaviour
         board.MakeMove((move.i, move.j, -1));
         visualGrid[move.i, move.j].SetAISpace();
         SetGridInteractable(true);
+        board.PrintBoard();
     }
 
     private void SetGridInteractable(bool interactable)

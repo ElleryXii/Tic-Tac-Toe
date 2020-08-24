@@ -9,19 +9,33 @@ public static class GameAI
 
     public static (int i, int j) GetBestMove(BoardState state)
     {
-        return GetRandomMove(state);
+        int depth = 15;
+        int bestu;
+        List<(int i, int j)> moves = state.GetRemainingMoves();
+        //bool player = state.lastMove.player == -1;
+
+        //if (player)
+        //bestu = int.MinValue;
+        //else
+        bestu = int.MaxValue;
+
+        (int i, int j) bestMove = moves[0];
+
+
+        foreach (var move in moves)
+        {
+            int u = MiniMax(state.GetNewState((move.i, move.j, -1)), depth, int.MinValue, int.MaxValue, true);
+            if (u <= bestu)
+            {
+                bestu = u;
+                bestMove = move;
+            }
+        }
+        return bestMove;
+        //return GetRandomMove(state);
     }
 
 
-
-    private static (int i, int j) GetRandomMove(BoardState state)
-    {
-        var random = new System.Random();
-        var possibleMoves = state.GetRemainingMoves();
-        int index = random.Next(possibleMoves.Count);
-        return possibleMoves[index];
-
-    }
 
     private static int MiniMax(BoardState state, int depth, int alpha, int beta, bool maximizing)
     {
@@ -60,5 +74,16 @@ public static class GameAI
             }
             return minVal;
         }
+    }
+
+
+
+    private static (int i, int j) GetRandomMove(BoardState state)
+    {
+        var random = new System.Random();
+        var possibleMoves = state.GetRemainingMoves();
+        int index = random.Next(possibleMoves.Count);
+        return possibleMoves[index];
+
     }
 }

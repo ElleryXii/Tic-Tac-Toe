@@ -9,15 +9,16 @@ public class BoardState
     public int winCondition;
     private List<(int i, int j)> remainingMoves;
     public bool gameEnd = false;
-    public (int i, int j) lastMove;
+    public (int i, int j, sbyte player) lastMove;
 
-    public BoardState(int boardSize)
+    public BoardState(int boardSize, int winCondition)
     {
+        this.winCondition = winCondition;
         this.boardSize = boardSize;
-        board = new sbyte[boardSize, boardSize];
 
+        board = new sbyte[boardSize, boardSize];
         remainingMoves = new List<(int i, int j)>();
-        lastMove = (-1, -1);
+        lastMove = (-1, -1, 0);
 
         for (int i = 0; i < boardSize; i++)
         {
@@ -35,7 +36,7 @@ public class BoardState
 
     public void MakeMove((int i, int j, sbyte player) move)
     {
-        lastMove = (move.i, move.j);
+        lastMove = move;
         board[move.i, move.j] = move.player;
         remainingMoves.Remove((move.i, move.j));
         if (remainingMoves.Count == 0)
@@ -47,7 +48,7 @@ public class BoardState
 
     public BoardState DeepCopy()
     {
-        var copy = new BoardState(boardSize);
+        var copy = new BoardState(boardSize, winCondition);
         for (int i = 0; i < boardSize; i++)
         {
             for (int j = 0; j < boardSize; j++)
@@ -71,6 +72,17 @@ public class BoardState
         copy.MakeMove(move);
         return copy;
 
+    }
+
+    public void PrintBoard()
+    {
+        string s = "";
+        foreach (var x in board)
+        {
+            s += x + " ";
+        }
+        s += GameEvaluate.Instance.GetEval(this);
+        Debug.Log(s);
     }
 
 }
