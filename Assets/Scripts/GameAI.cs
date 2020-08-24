@@ -12,27 +12,24 @@ public static class GameAI
         int depth = 15;
         int bestu;
         List<(int i, int j)> moves = state.GetRemainingMoves();
-        //bool player = state.lastMove.player == -1;
-
-        //if (player)
-        //bestu = int.MinValue;
-        //else
-        bestu = int.MaxValue;
+        bool player = state.lastMove.player == -1;
+        if (player)
+            bestu = int.MinValue;
+        else
+            bestu = int.MaxValue;
 
         (int i, int j) bestMove = moves[0];
 
-
         foreach (var move in moves)
         {
-            int u = MiniMax(state.GetNewState((move.i, move.j, -1)), depth, int.MinValue, int.MaxValue, true);
-            if (u <= bestu)
+            int u = MiniMax(state.GetNewState((move.i, move.j, (sbyte)(0 - state.lastMove.player))), depth, int.MinValue, int.MaxValue, !player);
+            if ((player && u >= bestu) || (!player && u <= bestu))
             {
                 bestu = u;
                 bestMove = move;
             }
         }
         return bestMove;
-        //return GetRandomMove(state);
     }
 
 

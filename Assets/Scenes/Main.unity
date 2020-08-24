@@ -571,6 +571,7 @@ MonoBehaviour:
   gridSpace: {fileID: 4438635426059569413, guid: 814848704e2344a8ea631689e1ff0ae1, type: 3}
   girdParent: {fileID: 1777097274}
   spaceParent: {fileID: 1899794138}
+  auto: 0
   winCondition: 3
   boardSize: 3
 --- !u!1 &1777097273

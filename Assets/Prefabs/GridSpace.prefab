@@ -116,7 +116,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 4438635426059569414}
   m_OnClick:
     m_PersistentCalls:
@@ -124,11 +124,11 @@ MonoBehaviour:
       - m_Target: {fileID: 858206365}
         m_TargetAssemblyTypeName: GridSpace, Assembly-CSharp
         m_MethodName: SetSpace
-        m_Mode: 5
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: X
           m_BoolArgument: 0
@@ -147,6 +147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   button: {fileID: 4438635426059569415}
   buttonText: {fileID: 4438635427272226811}
+  controller: {fileID: 0}
 --- !u!1 &4438635427272226809
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,15 +5,15 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     [SerializeField]
-    private GameObject gridLine;
+    private GameObject gridLine = null;
     [SerializeField]
-    private GameObject gridSpace;
+    private GameObject gridSpace = null;
     [SerializeField]
-    private Transform girdParent;
+    private Transform girdParent = null;
     [SerializeField]
-    private Transform spaceParent;
+    private Transform spaceParent = null;
 
-
+    public bool auto = false;
     public int winCondition;
     public int boardSize;
     const float screenSize = 1080;
@@ -26,6 +26,11 @@ public class GameController : MonoBehaviour
         visualGrid = new GridSpace[boardSize, boardSize];
         board = new BoardState(boardSize, winCondition);
         SetGrids();
+        SetGridInteractable(!auto);
+        if (auto)
+        {
+            MakeMove(1);
+        }
     }
 
     private void SetGrids()
@@ -76,31 +81,40 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void MoveMade((int i, int j) move)
+
+    public void MoveMade((int i, int j) move, sbyte player)
     {
-        SetGridInteractable(false);
-        board.MakeMove((move.i, move.j, 1));
+        SetGridInteractable(player == -1);
+        board.MakeMove((move.i, move.j, player));
         board.PrintBoard();
-        if (!board.gameEnd)
-            MakeMove();
+
+        if (player == 1)
+        {
+            if (!board.gameEnd)
+            {
+                MakeMove(-1);
+            }
+        }
+        else if (auto)
+        {
+            if (!board.gameEnd)
+            {
+                MakeMove(1);
+            }
+        }
     }
 
-    private void MakeMove()
+    private void MakeMove(sbyte player)
     {
-        var move = GameAI.GetBestMove(board);
-        board.MakeMove((move.i, move.j, -1));
-        visualGrid[move.i, move.j].SetAISpace();
-        SetGridInteractable(true);
-        board.PrintBoard();
+        var AImove = GameAI.GetBestMove(board);
+        visualGrid[AImove.i, AImove.j].SetSpace(player);
     }
 
     private void SetGridInteractable(bool interactable)
     {
-        foreach (var row in visualGrid)
+        foreach (var space in visualGrid)
         {
-            row.SetInteractable(interactable);
+            space.SetInteractable(interactable);
         }
     }
-
-
 }
