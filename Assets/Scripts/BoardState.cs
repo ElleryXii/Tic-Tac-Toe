@@ -7,7 +7,7 @@ public class BoardState
     public sbyte[,] board;
     public int boardSize;
     public int winCondition;
-    private List<(int i, int j)> remainingMoves;
+    private HashSet<(int i, int j)> remainingMoves;
     public bool gameEnd = false;
     public (int i, int j, sbyte player) lastMove;
 
@@ -17,7 +17,7 @@ public class BoardState
         this.boardSize = boardSize;
 
         board = new sbyte[boardSize, boardSize];
-        remainingMoves = new List<(int i, int j)>();
+        remainingMoves = new HashSet<(int i, int j)>();
         lastMove = (-1, -1, 0);
 
         for (int i = 0; i < boardSize; i++)
@@ -29,7 +29,7 @@ public class BoardState
         }
     }
 
-    public List<(int i, int j)> GetRemainingMoves()
+    public HashSet<(int i, int j)> GetRemainingMoves()
     {
         return remainingMoves;
     }
@@ -57,7 +57,7 @@ public class BoardState
             }
         }
 
-        copy.remainingMoves = new List<(int i, int j)>();
+        copy.remainingMoves = new HashSet<(int i, int j)>();
         foreach (var move in this.remainingMoves)
         {
             copy.remainingMoves.Add(move);

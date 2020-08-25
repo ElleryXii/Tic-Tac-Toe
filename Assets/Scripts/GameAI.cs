@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static System.Collections.Generic.HashSet<(int i, int j)>;
 
 public static class GameAI
 {
@@ -9,27 +10,37 @@ public static class GameAI
 
     public static (int i, int j) GetBestMove(BoardState state)
     {
-        int depth = 15;
-        int bestu;
-        List<(int i, int j)> moves = state.GetRemainingMoves();
-        bool player = state.lastMove.player == -1;
-        if (player)
-            bestu = int.MinValue;
-        else
-            bestu = int.MaxValue;
 
-        (int i, int j) bestMove = moves[0];
-
-        foreach (var move in moves)
+        HashSet<(int i, int j)> moves = state.GetRemainingMoves();
+        if (moves.Count <= 12)
         {
-            int u = MiniMax(state.GetNewState((move.i, move.j, (sbyte)(0 - state.lastMove.player))), depth, int.MinValue, int.MaxValue, !player);
-            if ((player && u >= bestu) || (!player && u <= bestu))
+            int depth = 15;
+            bool player = state.lastMove.player == -1;
+            int bestu = player ? int.MinValue : int.MaxValue;
+
+            //TODO: Rethink about how to use & dispose iterator 
+            Enumerator iter = moves.GetEnumerator();
+            var bestMove = iter.Current;
+            iter.Dispose();
+
+            //(int i, int j) bestMove = moves[0];
+
+            foreach (var move in moves)
             {
-                bestu = u;
-                bestMove = move;
+                int u = MiniMax(state.GetNewState((move.i, move.j, (sbyte)(0 - state.lastMove.player))), depth, int.MinValue, int.MaxValue, !player);
+                if ((player && u >= bestu) || (!player && u <= bestu))
+                {
+                    bestu = u;
+                    bestMove = move;
+                }
             }
+            return bestMove;
         }
-        return bestMove;
+        else
+        {
+            return GetRandomMove(state);
+        }
+
     }
 
 
@@ -41,10 +52,11 @@ public static class GameAI
         if (depth <= 0)
             return GameEvaluate.Instance.GetEval(state);
 
+        HashSet<(int i, int j)> branch = state.GetRemainingMoves();
+
         //get max value
         if (maximizing)
         {
-            List<(int i, int j)> branch = state.GetRemainingMoves();
             int maxVal = int.MinValue;
             foreach (var move in branch)
             {
@@ -59,7 +71,6 @@ public static class GameAI
         //get min value
         else
         {
-            List<(int i, int j)> branch = state.GetRemainingMoves();
             int minVal = int.MaxValue;
             foreach (var move in branch)
             {
@@ -77,10 +88,17 @@ public static class GameAI
 
     private static (int i, int j) GetRandomMove(BoardState state)
     {
+        //TODO: Rethink about how to use & dispose iterator 
+        Enumerator iter = state.GetRemainingMoves().GetEnumerator();
         var random = new System.Random();
-        var possibleMoves = state.GetRemainingMoves();
-        int index = random.Next(possibleMoves.Count);
-        return possibleMoves[index];
+        for (int i = 0; i < random.Next(state.GetRemainingMoves().Count); i++)
+            iter.MoveNext();
+        var move = iter.Current;
+        iter.Dispose();
+
+        return move;
 
     }
+
+
 }
