@@ -20,6 +20,12 @@ public class GameEvaluate
     }
 
 
+    /// <summary>
+    /// Get the evaluation of a game state.
+    /// </summary>
+    /// <returns>
+    /// int.MaxValue if player 1 won, int.MinValue if player -1 won, 0 if game ended in a draw, and heuristic value if game has not ended.
+    /// </returns>
     public int GetEval(BoardState state)
     {
         int w = CheckWin(state);
@@ -33,7 +39,13 @@ public class GameEvaluate
         return HeuRow(state, lastMove.i, lastMove.j) + HeuCol(state, lastMove.i, lastMove.j) + HeuDia(state, lastMove.i, lastMove.j) + HeuAntiDia(state, lastMove.i, lastMove.j);
     }
 
-    //check if game terminates. Return 0 is game has not terminated, 2 if it terminates in a draw, 1 is x win, -1 if o win
+
+    /// <summary>
+    /// Check if game terminates. 
+    /// </summary>
+    /// <returns>
+    /// 0 if the game has not ended, 2 if it ends in a draw, 1 is player 1 (x) win, -1 if player -1 (o) win.
+    /// </returns>
     public int CheckWin(BoardState state)
     {
         int rowCount = 0;

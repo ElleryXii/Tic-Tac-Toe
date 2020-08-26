@@ -12,6 +12,8 @@ public static class GameAI
     {
 
         HashSet<(int i, int j)> moves = state.GetRemainingMoves();
+
+        //If there are fewer than 12 remaining moves, use minimax
         if (moves.Count <= 12)
         {
             int depth = 15;
@@ -91,7 +93,8 @@ public static class GameAI
         //TODO: Rethink about how to use & dispose iterator 
         Enumerator iter = state.GetRemainingMoves().GetEnumerator();
         var random = new System.Random();
-        for (int i = 0; i < random.Next(state.GetRemainingMoves().Count); i++)
+        var rndInt = random.Next(state.GetRemainingMoves().Count);
+        for (int i = 0; i < rndInt; i++)
             iter.MoveNext();
         var move = iter.Current;
         iter.Dispose();

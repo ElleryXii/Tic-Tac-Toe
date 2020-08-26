@@ -20,8 +20,8 @@
 //        this.excludedMoves = excludedMoves;
 //        this.parent = parent;
 //        bridge = move;
-//        this.player = state.player;
-//        unexplored = state.GetMoves(player);
+//        this.player = state.lastMove.player == 1;
+//        unexplored = state.GetRemainingMoves();
 //        for (int i = 0; i < excludedMoves.Count; i++)
 //        {
 //            if (unexplored.get(i).isequal(excludedMoves[i]))
@@ -31,13 +31,13 @@
 //    }
 
 //    //select the node max uctvalue
-//    MctsNode select()
+//    MctsNode Select()
 //    {
 //        MctsNode selectedNode = this;
 //        double max = int.MinValue;
 //        foreach (MctsNode child in children)
 //        {
-//            double uctValue = getUctValue(child);
+//            double uctValue = GetUctValue(child);
 //            if (uctValue > max)
 //            {
 //                max = uctValue;
@@ -48,20 +48,20 @@
 //    }
 
 //    //get the uctvalue
-//    double getUctValue(MctsNode child)
+//    double GetUctValue(MctsNode child)
 //    {
 //        double uctValue;
 //        if (child.numSim == 0)
 //            uctValue = 1;
 //        else
-//            uctValue = (1.0 * child.getReward(player)) / (child.numSim * 1.0) + (Math.Sqrt(2.0 * (Math.Log(numSim * 1.0) / child.numSim)));
+//            uctValue = (1.0 * child.GetReward(player)) / (child.numSim * 1.0) + (Math.Sqrt(2.0 * (Math.Log(numSim * 1.0) / child.numSim)));
 //        Random r = new Random();
 //        uctValue += (r.NextDouble() / 10000000);
 //        return uctValue;
 //    }
 
 //    //expend an unexplored node
-//    MctsNode expand(BoardState state)
+//    MctsNode Expand(BoardState state)
 //    {
 //        if (!(unexplored.Count > 0))
 //            return this;
@@ -75,16 +75,16 @@
 //    }
 
 //    //update the reward of this and parent
-//    void backPropagate(Reward reward)
+//    void BackPropagate(Reward reward)
 //    {
 //        this.reward.addReward(reward);
 //        this.numSim++;
 //        if (parent != null)
-//            parent.backPropagate(reward);
+//            parent.BackPropagate(reward);
 //    }
 
 //    //get the most mostVisited node among the children
-//    MctsNode getMostVisited()
+//    MctsNode GetMostVisited()
 //    {
 //        int max = 0;
 //        MctsNode mostVisited = null;
@@ -101,7 +101,7 @@
 
 
 //    //get a list of equally most mostVisited node among the children
-//    LinkedList<MctsNode> getMostVisitedList()
+//    LinkedList<MctsNode> GetMostVisitedList()
 //    {
 //        LinkedList<MctsNode> mostVisited = new LinkedList<MctsNode>();
 //        int max = 0;
@@ -121,14 +121,13 @@
 //        return mostVisited;
 //    }
 
-//    double getReward(bool player)
+//    double GetReward(bool player)
 //    {
 //        return reward.GetReward(player);
 //    }
 
 //    public override string ToString()
 //    {
-
 //        return string.Format("numsim: {0}, reward: {1}", numSim, reward.ToString());
 //    }
 
