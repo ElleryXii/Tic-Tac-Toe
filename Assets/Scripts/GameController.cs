@@ -87,11 +87,13 @@ public class GameController : MonoBehaviour
         SetGridInteractable(player == -1);
         board.MakeMove((move.i, move.j, player));
         board.PrintBoard();
-
+        Debug.Log("gameend?: " + board.gameEnd);
         if (player == 1)
         {
             if (!board.gameEnd)
             {
+                Debug.Log("next!");
+
                 MakeMove(-1);
             }
         }
@@ -106,7 +108,7 @@ public class GameController : MonoBehaviour
 
     private void MakeMove(sbyte player)
     {
-        var AImove = GameAI.GetBestMove(board);
+        var AImove = GameAI.GetBestMove(board.DeepCopy());
         visualGrid[AImove.i, AImove.j].SetSpace(player);
     }
 

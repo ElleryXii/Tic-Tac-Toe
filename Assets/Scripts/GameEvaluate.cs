@@ -58,6 +58,7 @@ public class GameEvaluate
         var board = state.board;
         int m = state.winCondition;
         int n = state.boardSize;
+
         if (p == 0)
             return 0;
         //check row

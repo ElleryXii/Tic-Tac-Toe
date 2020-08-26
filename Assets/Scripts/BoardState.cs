@@ -7,7 +7,7 @@ public class BoardState
     public sbyte[,] board;
     public int boardSize;
     public int winCondition;
-    private HashSet<(int i, int j)> remainingMoves;
+    private List<(int i, int j)> remainingMoves;
     public bool gameEnd = false;
     public (int i, int j, sbyte player) lastMove;
 
@@ -17,7 +17,7 @@ public class BoardState
         this.boardSize = boardSize;
 
         board = new sbyte[boardSize, boardSize];
-        remainingMoves = new HashSet<(int i, int j)>();
+        remainingMoves = new List<(int i, int j)>();
         lastMove = (-1, -1, 0);
 
         for (int i = 0; i < boardSize; i++)
@@ -29,7 +29,7 @@ public class BoardState
         }
     }
 
-    public HashSet<(int i, int j)> GetRemainingMoves()
+    public List<(int i, int j)> GetRemainingMoves()
     {
         return remainingMoves;
     }
@@ -43,6 +43,7 @@ public class BoardState
         {
             gameEnd = true;
         }
+        Debug.Log(string.Format("Made Move: {0}, {1} by {2}, RemainingMove Count: {3}", move.i, move.j, move.player, remainingMoves.Count));
     }
 
 
@@ -57,12 +58,13 @@ public class BoardState
             }
         }
 
-        copy.remainingMoves = new HashSet<(int i, int j)>();
+        copy.remainingMoves = new List<(int i, int j)>();
         foreach (var move in this.remainingMoves)
         {
             copy.remainingMoves.Add(move);
         }
 
+        copy.lastMove = this.lastMove;
         return copy;
     }
 
@@ -81,7 +83,7 @@ public class BoardState
         {
             s += x + " ";
         }
-        s += GameEvaluate.Instance.GetEval(this);
+        //s += GameEvaluate.Instance.GetEval(this);
         Debug.Log(s);
     }
 

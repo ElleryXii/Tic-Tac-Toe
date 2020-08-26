@@ -10,39 +10,159 @@ public static class GameAI
 
     public static (int i, int j) GetBestMove(BoardState state)
     {
-
-        HashSet<(int i, int j)> moves = state.GetRemainingMoves();
-
-        //If there are fewer than 12 remaining moves, use minimax
-        if (moves.Count <= 12)
+        MctsPlanner.Instance.excluded = new List<(int i, int j)>();
+        int remainingMove = state.GetRemainingMoves().Count;
+        int depth = 5;
+        int bestu = 0;
+        bool player = state.lastMove.player == -1;
+        //blank board, go for the center
+        if (remainingMove == state.boardSize * state.boardSize)
+            return (state.boardSize / 2, state.boardSize / 2);
+        //use monte carlo tree search
+        if (remainingMove > 9)
         {
-            int depth = 15;
-            bool player = state.lastMove.player == -1;
-            int bestu = player ? int.MinValue : int.MaxValue;
+            //max 3 chances of re-run mcts if no move left after minimax test
+            int i = 1;
+            while (i > 0)
+            {
+                //get a list of move candidate use mcts
+                List<(int i, int j)> MctsMoves = MctsPlanner.Instance.GetMoves(state);
 
-            //TODO: Rethink about how to use & dispose iterator 
-            Enumerator iter = moves.GetEnumerator();
-            var bestMove = iter.Current;
-            iter.Dispose();
 
-            //(int i, int j) bestMove = moves[0];
 
+                for (int k = MctsMoves.Count - 1; k >= 0; k--)
+                {
+                    var move = MctsMoves[i];
+                    int u = MiniMax(state.GetNewState((move.i, move.j, (sbyte)(0 - state.lastMove.player))), depth, int.MinValue, int.MaxValue, !player);
+                    if ((player && u == int.MinValue) || (!player && u == int.MaxValue))
+                    {
+                        MctsPlanner.Instance.excluded.Add(move);
+                        MctsMoves.Remove(move);
+                    }
+                }
+
+
+                //if there's move remaing, return the first one
+                if (MctsMoves.Count != 0)
+                    return MctsMoves[0];
+                i--;
+            }
+        }
+        //switch to minimax at endgame
+        if (remainingMove <= 9)
+            depth = 10;
+        List<(int i, int j)> moves = state.GetRemainingMoves();
+
+        bestu = player ? int.MinValue : int.MaxValue;
+
+        var bestMove = moves[0];
+        foreach (var move in moves)
+        {
+            int u = MiniMax(state.GetNewState((move.i, move.j, (sbyte)(0 - state.lastMove.player))), depth, int.MinValue, int.MaxValue, !player);
+            if ((player && u >= bestu) || (!player && u <= bestu))
+            {
+                bestu = u;
+                bestMove = move;
+            }
+        }
+        return bestMove;
+    }
+
+
+
+    //public static (int i, int j) GetBestMove(BoardState state)
+    //{
+    //    //If there are fewer than 12 remaining moves, use minimax
+    //    if (state.GetRemainingMoves().Count <= 12)
+    //    {
+    //        return MinMaxDriver(state);
+    //    }
+    //    else
+    //    {
+    //        var move = MctsDriver(state.DeepCopy());
+    //        if (move == (-1, -1))
+    //            return GetRandomMove(state);
+    //        else
+    //            return move;
+    //    }
+
+    //}
+
+
+    private static (int i, int j) MctsDriver(BoardState state)
+    {
+        //max 3 chances of re-run mcts if no move left after minimax test
+        // return mcts.getMove(game);
+        MctsPlanner.Instance.excluded = new List<(int i, int j)>();
+
+        int i = 3;
+        int depth = 5;
+        bool player = state.lastMove.player == -1;
+
+        while (i > 0)
+        {
+            //get a list of move candidate use mcts
+            List<(int i, int j)> moves = MctsPlanner.Instance.GetMoves(state);
+            //for (int j = 0; j < moves.Count; j++)
+            //{
+            //    Debug.Log("mcts move ");
+            //    moves[j].print();
+            //}
+            //for (int j = 0; j < MctsPlanner.Instance.excluded.Count; j++)
+            //{
+            //    Debug.Log("mcts excluded ");
+            //    MctsPlanner.Instance.excluded[j].ToString();
+            //}
             foreach (var move in moves)
             {
+                //test the moves with minimax, make sure they won't fail on the next several steps
                 int u = MiniMax(state.GetNewState((move.i, move.j, (sbyte)(0 - state.lastMove.player))), depth, int.MinValue, int.MaxValue, !player);
-                if ((player && u >= bestu) || (!player && u <= bestu))
+                if ((player && u == int.MinValue) || (!player && u == int.MaxValue))
                 {
-                    bestu = u;
-                    bestMove = move;
+                    MctsPlanner.Instance.excluded.Add(move);
+                    moves.Remove(move);
                 }
             }
-            return bestMove;
+            //if there's move remaing, return the first one
+            if (moves.Count != 0)
+                return moves[0];
+            Debug.Log("isEmpty");
+            i--;
         }
-        else
+        Debug.Log("isEmpty after 5");
+        //TODO: No good moves found, use minimax;
+        return (-1, -1);
+    }
+
+
+
+    //TODO: Should be able to combine this with Minimax
+    private static (int i, int j) MinMaxDriver(BoardState state)
+    {
+        List<(int i, int j)> moves = state.GetRemainingMoves();
+        if (moves.Count == 0)
         {
-            return GetRandomMove(state);
+            return (-1, -1);
         }
 
+        int depth = 15;
+        bool player = state.lastMove.player == -1;
+        int bestu = player ? int.MinValue : int.MaxValue;
+
+        var bestMove = moves[0];
+
+        //(int i, int j) bestMove = moves[0];
+
+        foreach (var move in moves)
+        {
+            int u = MiniMax(state.GetNewState((move.i, move.j, (sbyte)(0 - state.lastMove.player))), depth, int.MinValue, int.MaxValue, !player);
+            if ((player && u >= bestu) || (!player && u <= bestu))
+            {
+                bestu = u;
+                bestMove = move;
+            }
+        }
+        return bestMove;
     }
 
 
@@ -54,7 +174,7 @@ public static class GameAI
         if (depth <= 0)
             return GameEvaluate.Instance.GetEval(state);
 
-        HashSet<(int i, int j)> branch = state.GetRemainingMoves();
+        List<(int i, int j)> branch = state.GetRemainingMoves();
 
         //get max value
         if (maximizing)
@@ -88,19 +208,12 @@ public static class GameAI
 
 
 
-    private static (int i, int j) GetRandomMove(BoardState state)
+    public static (int i, int j) GetRandomMove(BoardState state)
     {
-        //TODO: Rethink about how to use & dispose iterator 
-        Enumerator iter = state.GetRemainingMoves().GetEnumerator();
         var random = new System.Random();
         var rndInt = random.Next(state.GetRemainingMoves().Count);
-        for (int i = 0; i < rndInt; i++)
-            iter.MoveNext();
-        var move = iter.Current;
-        iter.Dispose();
-
-        return move;
-
+        //Debug.Log("remaingmoves count: " + state.GetRemainingMoves().Count + " rndInt: " + rndInt);
+        return state.GetRemainingMoves()[rndInt];
     }
 
 
