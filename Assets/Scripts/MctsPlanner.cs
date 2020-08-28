@@ -75,8 +75,6 @@ public class MctsPlanner
         return node;
     }
 
-
-
     public Reward RollOut(BoardState game)
     {
         while (GameEvaluate.Instance.CheckWin(game) == 0)

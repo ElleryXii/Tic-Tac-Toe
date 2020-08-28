@@ -6,15 +6,9 @@ public class Reward
 {
     public (int playerOne, int playerTwo) rewards;
 
-
     public Reward(int reward0, int reward1)
     {
         rewards = (reward0, reward1);
-    }
-
-    (int playerOne, int playerTwo) GetReward()
-    {
-        return rewards;
     }
 
     public int GetReward(bool player)

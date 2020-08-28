@@ -82,28 +82,28 @@ public class GameController : MonoBehaviour
     }
 
 
+
     public void MoveMade((int i, int j) move, sbyte player)
     {
         SetGridInteractable(player == -1);
         board.MakeMove((move.i, move.j, player));
-        board.PrintBoard();
-        Debug.Log("gameend?: " + board.gameEnd);
-        if (player == 1)
+        if (GameEvaluate.Instance.CheckWin(board) == 0)
         {
-            if (!board.gameEnd)
+            if (player == 1)
             {
-                Debug.Log("next!");
-
                 MakeMove(-1);
             }
-        }
-        else if (auto)
-        {
-            if (!board.gameEnd)
+            else if (auto)
             {
+
                 MakeMove(1);
             }
         }
+        else
+        {
+            SetGridInteractable(false);
+        }
+
     }
 
     private void MakeMove(sbyte player)
