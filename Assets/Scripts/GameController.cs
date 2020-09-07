@@ -86,6 +86,7 @@ public class GameController : MonoBehaviour
     public void MoveMade((int i, int j) move, sbyte player)
     {
         SetGridInteractable(player == -1);
+
         board.MakeMove((move.i, move.j, player));
         if (GameEvaluate.Instance.CheckWin(board) == 0)
         {

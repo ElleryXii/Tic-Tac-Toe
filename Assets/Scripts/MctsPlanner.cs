@@ -19,6 +19,7 @@ public class MctsPlanner
 
 
     int maxIterations;
+
     public List<(int i, int j)> excluded = new List<(int i, int j)>();
 
     private MctsPlanner(int i)

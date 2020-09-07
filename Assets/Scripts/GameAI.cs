@@ -7,7 +7,6 @@ using static System.Collections.Generic.HashSet<(int i, int j)>;
 public static class GameAI
 {
 
-
     public static (int i, int j) GetBestMove(BoardState state)
     {
         MctsPlanner.Instance.excluded = new List<(int i, int j)>();
@@ -62,6 +61,7 @@ public static class GameAI
                 bestMove = move;
             }
         }
+
         return bestMove;
     }
 
