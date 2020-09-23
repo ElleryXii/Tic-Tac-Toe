@@ -19,7 +19,6 @@ public class GameEvaluate
         }
     }
 
-
     /// <summary>
     /// Get the evaluation of a game state.
     /// </summary>

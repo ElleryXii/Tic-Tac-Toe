@@ -6,12 +6,12 @@ using UnityEngine.UI;
 public class Spinner : MonoBehaviour
 {
 
+    //[SerializeField]
+    //RectTransform holder = null;
     [SerializeField]
-    RectTransform holder;
+    Image spinnerImage = null;
     [SerializeField]
-    Image spinnerImage;
-    [SerializeField]
-    Text textProgress;
+    Text textProgress = null;
     [SerializeField]
     [Range(0, 1)]
     float progress = 0f;
@@ -45,7 +45,7 @@ public class Spinner : MonoBehaviour
     public void StartEffect()
     {
         spining = true;
-        StartCoroutine("Sping");
+        StartCoroutine("Spin");
     }
 
 

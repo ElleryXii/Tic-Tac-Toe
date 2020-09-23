@@ -55,7 +55,6 @@ public class GameController : MonoBehaviour
 
         }
 
-
         // Set Space
         position = -screenSize / 2 + gridSize / 2;
         float y_position = screenSize / 2 - gridSize / 2;
@@ -82,11 +81,9 @@ public class GameController : MonoBehaviour
     }
 
 
-
     public void MoveMade((int i, int j) move, sbyte player)
     {
         SetGridInteractable(player == -1);
-
         board.MakeMove((move.i, move.j, player));
         if (GameEvaluate.Instance.CheckWin(board) == 0)
         {
@@ -96,7 +93,6 @@ public class GameController : MonoBehaviour
             }
             else if (auto)
             {
-
                 MakeMove(1);
             }
         }
@@ -109,7 +105,11 @@ public class GameController : MonoBehaviour
 
     private void MakeMove(sbyte player)
     {
-        var AImove = GameAI.GetBestMove(board.DeepCopy());
+        StartCoroutine(GameAI.Instance.GetBestMove(board.DeepCopy(), (move) => FoundMove(move, player)));
+    }
+
+    private void FoundMove((int i, int j) AImove, sbyte player)
+    {
         visualGrid[AImove.i, AImove.j].SetSpace(player);
     }
 

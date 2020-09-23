@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class MctsPlanner
 {
@@ -43,8 +44,29 @@ public class MctsPlanner
         return mostVisitedChild.bridge;
     }
 
+    ////get a list of best moves
+    //public List<(int i, int j)> GetMoves(BoardState game)
+    //{
+    //    MctsNode rootNode = new MctsNode(null, (-1, -1), game, excluded);
+    //    for (int i = 0; i < maxIterations; i++)
+    //    {
+    //        BoardState gameCopy = game.DeepCopy();
+    //        MctsNode node = Select(rootNode, gameCopy);
+    //        node = node.Expand(gameCopy);
+    //        Reward reward = RollOut(gameCopy);
+    //        node.BackPropagate(reward);
+    //    }
+    //    List<MctsNode> mostVisited = rootNode.GetMostVisitedList();
+    //    List<(int i, int j)> moves = new List<(int i, int j)>();
+    //    for (int i = 0; i < mostVisited.Count; i++)
+    //    {
+    //        moves.Add(mostVisited[i].bridge);
+    //    }
+    //    return moves;
+    //}
+
     //get a list of best moves
-    public List<(int i, int j)> GetMoves(BoardState game)
+    public IEnumerator GetMoves(BoardState game, Action<List<(int i, int j)>> callback)
     {
         MctsNode rootNode = new MctsNode(null, (-1, -1), game, excluded);
         for (int i = 0; i < maxIterations; i++)
@@ -54,6 +76,11 @@ public class MctsPlanner
             node = node.Expand(gameCopy);
             Reward reward = RollOut(gameCopy);
             node.BackPropagate(reward);
+            if (i % 1000 == 0)
+            {
+                Debug.Log("geting moves");
+                yield return null;
+            }
         }
         List<MctsNode> mostVisited = rootNode.GetMostVisitedList();
         List<(int i, int j)> moves = new List<(int i, int j)>();
@@ -61,7 +88,7 @@ public class MctsPlanner
         {
             moves.Add(mostVisited[i].bridge);
         }
-        return moves;
+        callback(moves);
     }
 
     public MctsNode Select(MctsNode node, BoardState game)

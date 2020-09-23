@@ -43,7 +43,7 @@ public class BoardState
         {
             gameEnd = true;
         }
-        Debug.Log(string.Format("Made Move: {0}, {1} by {2}, RemainingMove Count: {3}", move.i, move.j, move.player, remainingMoves.Count));
+        //Debug.Log(string.Format("Made Move: {0}, {1} by {2}, RemainingMove Count: {3}", move.i, move.j, move.player, remainingMoves.Count));
     }
 
 
