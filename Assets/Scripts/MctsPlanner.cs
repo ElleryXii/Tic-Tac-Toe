@@ -78,7 +78,6 @@ public class MctsPlanner
             node.BackPropagate(reward);
             if (i % 1000 == 0)
             {
-                Debug.Log("geting moves");
                 yield return null;
             }
         }
@@ -107,7 +106,6 @@ public class MctsPlanner
     {
         while (GameEvaluate.Instance.CheckWin(game) == 0)
         {
-            //Debug.Log("Check Win Result: " + GameEvaluate.Instance.CheckWin(game));
             var move = GameAI.GetRandomMove(game);
             game.MakeMove((move.i, move.j, (sbyte)(0 - game.lastMove.player)));
         }

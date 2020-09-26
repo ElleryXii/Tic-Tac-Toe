@@ -43,23 +43,20 @@ public class GameAI : MonoBehaviour
             while (i > 0)
             {
                 //get a list of move candidate use mcts
-                //List<(int i, int j)> MctsMoves = MctsPlanner.Instance.GetMoves(state);
-
                 List<(int i, int j)> MctsMoves = null;
                 yield return MctsPlanner.Instance.GetMoves(state, (m) => SetMctsMovesList(m, out MctsMoves));
 
-                //for (int k = MctsMoves.Count - 1; k >= 0; k--)
-                //{
-                //    var move = MctsMoves[i];
-                //    int u = MiniMax(state.GetNewState((move.i, move.j, (sbyte)(0 - state.lastMove.player))), depth, int.MinValue, int.MaxValue, !player);
-                //    if ((player && u == int.MinValue) || (!player && u == int.MaxValue))
-                //    {
-                //        MctsPlanner.Instance.excluded.Add(move);
-                //        MctsMoves.Remove(move);
-                //    }
-                //}
+                for (int k = MctsMoves.Count - 1; k >= 0; k--)
+                {
+                    var move = MctsMoves[i];
+                    int u = MiniMax(state.GetNewState((move.i, move.j, (sbyte)(0 - state.lastMove.player))), depth, int.MinValue, int.MaxValue, !player);
+                    if ((player && u == int.MinValue) || (!player && u == int.MaxValue))
+                    {
+                        MctsPlanner.Instance.excluded.Add(move);
+                        MctsMoves.Remove(move);
+                    }
+                }
                 //if there's move remaing, return the first one
-                Debug.Log("what? ");
                 if (MctsMoves.Count != 0)
                 {
                     OnEnd(MctsMoves[0]);
@@ -95,25 +92,6 @@ public class GameAI : MonoBehaviour
     {
         listRef = list;
     }
-
-
-    //public static (int i, int j) GetBestMove(BoardState state)
-    //{
-    //    //If there are fewer than 12 remaining moves, use minimax
-    //    if (state.GetRemainingMoves().Count <= 12)
-    //    {
-    //        return MinMaxDriver(state);
-    //    }
-    //    else
-    //    {
-    //        var move = MctsDriver(state.DeepCopy());
-    //        if (move == (-1, -1))
-    //            return GetRandomMove(state);
-    //        else
-    //            return move;
-    //    }
-
-    //}
 
 
     //private static (int i, int j) MctsDriver(BoardState state)
@@ -222,7 +200,6 @@ public class GameAI : MonoBehaviour
             return minVal;
         }
     }
-
 
 
     public static (int i, int j) GetRandomMove(BoardState state)

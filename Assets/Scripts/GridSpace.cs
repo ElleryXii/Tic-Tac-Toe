@@ -7,13 +7,13 @@ public class GridSpace : MonoBehaviour
 {
     public Button button;
     public Text buttonText;
-    public (int i, int j) position;
+    public (int i, int j) index;
     public GameController controller = null;
 
     public void SetSpace(int player = 1)
     {
         buttonText.text = player == 1 ? "X" : "O";
-        controller.MoveMade(position, (sbyte)player);
+        controller.MoveMade(index, (sbyte)player);
     }
 
     public void SetInteractable(bool interactable)

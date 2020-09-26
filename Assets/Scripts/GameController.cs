@@ -16,13 +16,14 @@ public class GameController : MonoBehaviour
     public bool auto = false;
     public int winCondition;
     public int boardSize;
-    const float screenSize = 1080;
+    readonly float screenSize = Screen.width;
 
     private GridSpace[,] visualGrid;
     private BoardState board;
 
     void Start()
     {
+        gridLine.GetComponent<RectTransform>().sizeDelta = new Vector2(5, screenSize);
         visualGrid = new GridSpace[boardSize, boardSize];
         board = new BoardState(boardSize, winCondition);
         SetGrids();
@@ -41,18 +42,18 @@ public class GameController : MonoBehaviour
         // Set Lines
         for (int i = 0; i < boardSize - 1; i++)
         {
-
+            // Horizontal 
             GameObject line = Instantiate(gridLine);
             line.transform.SetParent(girdParent);
             line.transform.localPosition = new Vector3(position, 0, 0);
 
+            // Vertical
             line = Instantiate(gridLine);
             line.transform.SetParent(girdParent);
             line.transform.localPosition = new Vector3(0, position, 0);
             line.transform.Rotate(new Vector3(0, 0, 90));
 
             position += gridSize;
-
         }
 
         // Set Space
@@ -66,7 +67,7 @@ public class GameController : MonoBehaviour
                 GameObject space = Instantiate(gridSpace);
                 visualGrid[i, j] = space.GetComponent<GridSpace>();
                 visualGrid[i, j].controller = this;
-                visualGrid[i, j].position = (i, j);
+                visualGrid[i, j].index = (i, j);
                 space.transform.SetParent(spaceParent);
                 space.transform.localPosition = new Vector3(x_position, y_position, 0);
 
