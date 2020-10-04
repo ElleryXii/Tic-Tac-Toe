@@ -12,6 +12,8 @@ public class GameController : MonoBehaviour
     private Transform girdParent = null;
     [SerializeField]
     private Transform spaceParent = null;
+    [SerializeField]
+    private GameAI gameAI = null;
 
     public bool auto = false;
     public int winCondition;
@@ -106,7 +108,7 @@ public class GameController : MonoBehaviour
 
     private void MakeMove(sbyte player)
     {
-        StartCoroutine(GameAI.Instance.GetBestMove(board.DeepCopy(), (move) => FoundMove(move, player)));
+        StartCoroutine(gameAI.GetBestMove(board.DeepCopy(), (move) => FoundMove(move, player)));
     }
 
     private void FoundMove((int i, int j) AImove, sbyte player)

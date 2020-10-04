@@ -6,19 +6,19 @@ using UnityEngine;
 public class GameAI : MonoBehaviour
 {
 
-    private static GameAI instance = null;
-    private GameAI() { }
-    public static GameAI Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = new GameAI();
-            }
-            return instance;
-        }
-    }
+    //private static GameAI instance = null;
+    //private GameAI() { }
+    //public static GameAI Instance
+    //{
+    //    get
+    //    {
+    //        if (instance == null)
+    //        {
+    //            instance = new GameAI();
+    //        }
+    //        return instance;
+    //    }
+    //}
 
     public IEnumerator GetBestMove(BoardState state, Action<(int i, int j)> OnEnd)
     {
