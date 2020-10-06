@@ -5,9 +5,42 @@ using UnityEngine;
 public class StatusDisplayer : MonoBehaviour
 {
     [SerializeField]
-    Spinner p1 = null;
+    private Spinner p1 = null;
     [SerializeField]
-    Spinner p2 = null;
+    private Spinner p2 = null;
+
+    private void Start()
+    {
+        StopCalculating(p1);
+        StopCalculating(p2);
+    }
+
+
+
+    public void ShowCalculating(sbyte p)
+    {
+        if (p == 1)
+        {
+            ShowCalculating(p1);
+        }
+        else
+        {
+            ShowCalculating(p2);
+        }
+    }
+
+    public void StopCalculating(sbyte p)
+    {
+        if (p == 1)
+        {
+            StopCalculating(p1);
+        }
+        else
+        {
+            StopCalculating(p2);
+        }
+    }
+
 
     public void ShowCalculating(Spinner p)
     {

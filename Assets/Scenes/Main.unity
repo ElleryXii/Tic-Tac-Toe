@@ -1041,6 +1041,7 @@ MonoBehaviour:
   girdParent: {fileID: 1777097274}
   spaceParent: {fileID: 1899794138}
   gameAI: {fileID: 1722741937}
+  status: {fileID: 1000592542}
   auto: 0
   winCondition: 5
   boardSize: 5

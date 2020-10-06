@@ -14,6 +14,8 @@ public class GameController : MonoBehaviour
     private Transform spaceParent = null;
     [SerializeField]
     private GameAI gameAI = null;
+    [SerializeField]
+    private StatusDisplayer status = null;
 
     public bool auto = false;
     public int winCondition;
@@ -108,11 +110,13 @@ public class GameController : MonoBehaviour
 
     private void MakeMove(sbyte player)
     {
+        status.ShowCalculating(player);
         StartCoroutine(gameAI.GetBestMove(board.DeepCopy(), (move) => FoundMove(move, player)));
     }
 
     private void FoundMove((int i, int j) AImove, sbyte player)
     {
+        status.StopCalculating(player);
         visualGrid[AImove.i, AImove.j].SetSpace(player);
     }
 
