@@ -44,27 +44,6 @@ public class MctsPlanner
         return mostVisitedChild.bridge;
     }
 
-    ////get a list of best moves
-    //public List<(int i, int j)> GetMoves(BoardState game)
-    //{
-    //    MctsNode rootNode = new MctsNode(null, (-1, -1), game, excluded);
-    //    for (int i = 0; i < maxIterations; i++)
-    //    {
-    //        BoardState gameCopy = game.DeepCopy();
-    //        MctsNode node = Select(rootNode, gameCopy);
-    //        node = node.Expand(gameCopy);
-    //        Reward reward = RollOut(gameCopy);
-    //        node.BackPropagate(reward);
-    //    }
-    //    List<MctsNode> mostVisited = rootNode.GetMostVisitedList();
-    //    List<(int i, int j)> moves = new List<(int i, int j)>();
-    //    for (int i = 0; i < mostVisited.Count; i++)
-    //    {
-    //        moves.Add(mostVisited[i].bridge);
-    //    }
-    //    return moves;
-    //}
-
     //get a list of best moves
     public IEnumerator GetMoves(BoardState game, Action<List<(int i, int j)>> callback)
     {
