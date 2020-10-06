@@ -19,7 +19,6 @@ public class GameAI : MonoBehaviour
             OnEnd((state.boardSize / 2, state.boardSize / 2));
             yield break;
         }
-
         //use monte carlo tree search
         if (remainingMove > 9)
         {
@@ -29,8 +28,7 @@ public class GameAI : MonoBehaviour
             {
                 //get a list of move candidate use mcts
                 List<(int i, int j)> MctsMoves = null;
-                yield return MctsPlanner.Instance.GetMoves(state, (m) => SetMctsMovesList(m, out MctsMoves));
-
+                yield return MctsPlanner.Instance.GetMoves(state, (m) => MctsMoves = m);
                 for (int k = MctsMoves.Count - 1; k >= 0; k--)
                 {
                     var move = MctsMoves[i];
@@ -72,10 +70,6 @@ public class GameAI : MonoBehaviour
         yield break;
     }
 
-    private void SetMctsMovesList(List<(int i, int j)> list, out List<(int i, int j)> listRef)
-    {
-        listRef = list;
-    }
 
     private int MiniMax(BoardState state, int depth, int alpha, int beta, bool maximizing)
     {

@@ -104,6 +104,7 @@ public class GameController : MonoBehaviour
         else
         {
             SetGridInteractable(false);
+            status.ShowResult(1);
         }
 
     }
